@@ -30,6 +30,27 @@ Las aplicaciones tienen 7 ciclos de vida por los que pasa nuestra actividad, son
 - OnRestart -> Indica que la actividad está a punto de ser reiniciada
 - OnDestroy -> Indica que la actividad está a punto de ser destruida
 
+### 2. Log cat
+El Log cat es una herramienta muy util para mirar errores o comprobar cosas. Podemos mirarlo como si fuera
+un System.out.println de java. Ejemplo:
+```bash
+#ejemplo de log cat dentro del OnCreate
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            
+                Log.d("OnCreate", "Me encuentro dentro del onCreate")
+            
+        }
+    }
+}
+```
+
+Aquí ponemos un log cat dentro del OnCreate para asegurarnos de que la actividad ha empezado.
+Para comprobarlo nos iríamos al log cat, Introduciríamos el Tag (OnCreate) y deberíamos de ver el mensage
+
 
  
 
