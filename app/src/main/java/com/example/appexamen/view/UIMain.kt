@@ -58,6 +58,9 @@ fun Game(viewModel: ViewModel, text: String) {
                 CreateButton(Color.Green)
                 CreateButton(Color.Blue)
             }
+            Row {
+                StartButton(Color.Magenta)
+            }
         }
 
     }
@@ -70,7 +73,7 @@ fun NombreJUgador(text: String) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(top = 30.dp, start = 100.dp)
+            .padding(top = 30.dp, start = 90.dp)
     ) {
 
         Text(
@@ -93,6 +96,23 @@ fun CreateButton(color: Color) {
         modifier = Modifier
             .padding(top = 60.dp, start = 20.dp)
             .size(width = 150.dp, height = 60.dp)
+    ) {
+
+    }
+}
+
+@Composable
+fun StartButton(color: Color) {
+    Button(
+        onClick = {
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = color,
+        ),
+        modifier = Modifier
+            .padding(top = 60.dp, start = 90.dp)
+            .size(width = 200.dp, height = 100.dp)
+            .clip(CircleShape)
     ) {
 
     }
