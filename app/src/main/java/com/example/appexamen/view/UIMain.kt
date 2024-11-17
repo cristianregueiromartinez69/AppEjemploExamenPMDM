@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,7 +27,7 @@ import com.example.appexamen.R
 import com.example.appexamen.viewmodel.ViewModel
 
 @Composable
-fun Game(viewModel: ViewModel, text:String) {
+fun Game(viewModel: ViewModel, text: String) {
 
     Box(
         modifier = Modifier
@@ -42,17 +43,35 @@ fun Game(viewModel: ViewModel, text:String) {
         Column {
             NombreJUgador(text)
         }
+        Column(modifier = Modifier
+            .padding(top = 130.dp)) {
+            Row {
+                CreateButton(Color.Red)
+                CreateButton(Color.Yellow)
+
+            }
+            Row {
+                CreateButton(Color.Cyan)
+                CreateButton(Color.DarkGray)
+            }
+            Row {
+                CreateButton(Color.Green)
+                CreateButton(Color.Blue)
+            }
+        }
 
     }
 }
 
 @Composable
-fun NombreJUgador(text: String){
+fun NombreJUgador(text: String) {
 
-    Column( verticalArrangement = Arrangement.Center,
+    Column(
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(top = 30.dp, start = 80.dp)) {
+            .padding(top = 30.dp, start = 100.dp)
+    ) {
 
         Text(
             text = "Jugador: $text",
@@ -63,7 +82,7 @@ fun NombreJUgador(text: String){
 }
 
 @Composable
-fun CreateButton(color:Color){
+fun CreateButton(color: Color) {
     Button(
         onClick = {
         },
@@ -72,11 +91,13 @@ fun CreateButton(color:Color){
             containerColor = color,
         ),
         modifier = Modifier
-            .padding(3.dp)
+            .padding(top = 60.dp, start = 20.dp)
             .size(width = 150.dp, height = 60.dp)
-    ){
+    ) {
 
     }
 }
+
+
 
 
