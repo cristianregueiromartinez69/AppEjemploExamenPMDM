@@ -19,7 +19,7 @@ import com.example.appexamen.R
 import com.example.appexamen.viewmodel.ViewModel
 
 @Composable
-fun Game(viewModel: ViewModel) {
+fun Game(viewModel: ViewModel, text:String) {
 
     Box(
         modifier = Modifier
@@ -33,22 +33,22 @@ fun Game(viewModel: ViewModel) {
             modifier = Modifier.fillMaxSize()
         )
         Column {
-            NombreJUgador(viewModel)
+            NombreJUgador(text)
         }
 
     }
 }
 
 @Composable
-fun NombreJUgador(viewModel: ViewModel){
+fun NombreJUgador(text: String){
 
     Column( verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(top = 30.dp, start = 30.dp)) {
+            .padding(top = 30.dp, start = 80.dp)) {
 
         Text(
-            text = "Jugador: " + viewModel.getNombre(),
+            text = "Jugador: $text",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )

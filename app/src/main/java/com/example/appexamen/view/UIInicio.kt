@@ -1,5 +1,6 @@
 package com.example.appexamen.view
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -35,6 +37,7 @@ import com.example.appexamen.viewmodel.ViewModel
 fun MyApp(viewModel: ViewModel) {
     var pulsado by remember { mutableStateOf(false) }
     var text by remember { mutableStateOf("") }
+    val textoGame by viewModel.nombreLiveData.observeAsState(viewModel.getNombre())
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -48,12 +51,12 @@ fun MyApp(viewModel: ViewModel) {
         )
         Column {
             if (!pulsado){
-                Login({ pulsado = true
-                        viewModel.setNombre(text)
+                Login({
+                    pulsado = true
                       }, viewModel, remember { mutableStateOf(text) })
             }
             else{
-                Game(viewModel)
+                Game(viewModel, textoGame)
             }
         }
     }
@@ -152,6 +155,7 @@ fun Buttonenter(funcion: () -> Unit, viewModel: ViewModel, texto: MutableState<S
         Button(
             enabled = _activo,
             onClick = {
+                viewModel.setNombre(texto.value)
                 funcion()
             },
             shape = RoundedCornerShape(16.dp),
