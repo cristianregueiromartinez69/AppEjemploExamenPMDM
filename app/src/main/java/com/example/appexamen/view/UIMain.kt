@@ -35,3 +35,8 @@ fun Game(viewModel: ViewModel) {
     }
 }
 
+@Composable
+fun NombreJUgador(viewModel: ViewModel){
+
+}
+
