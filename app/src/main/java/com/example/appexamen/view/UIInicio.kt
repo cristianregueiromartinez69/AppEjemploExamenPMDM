@@ -15,6 +15,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,14 +25,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.appexamen.R
+import com.example.appexamen.viewmodel.ViewModel
 
 @Composable
-fun MyApp() {
+fun MyApp(viewModel: ViewModel) {
+    var pulsado by remember { mutableStateOf(false) }
+    var text by remember { mutableStateOf("") }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -44,13 +49,13 @@ fun MyApp() {
             modifier = Modifier.fillMaxSize()
         )
         Column {
-            Login()
+            Login(remember { mutableStateOf(pulsado) }, viewModel, remember { mutableStateOf(text) })
         }
     }
 }
 
 @Composable
-fun Login() {
+fun Login(pulsado :MutableState<Boolean>, viewModel: ViewModel, texto: MutableState<String>) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -65,10 +70,10 @@ fun Login() {
             NombreInicio()
         }
         Row {
-            TextNombreEscribir()
+            TextNombreEscribir(texto)
         }
         Row {
-            Buttonenter()
+            Buttonenter(pulsado, viewModel, texto)
         }
 
     }
@@ -107,9 +112,7 @@ fun NombreInicio(){
 }
 
 @Composable
-fun TextNombreEscribir() {
-    var text by remember { mutableStateOf("") }
-
+fun TextNombreEscribir(text: MutableState<String>) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -118,23 +121,33 @@ fun TextNombreEscribir() {
     ) {
     }
     TextField(
-        value = text,
+        value = text.value,
         onValueChange = { newText ->
-            text = newText
+            text.value = newText
         },
         placeholder = { Text("Nombre aquí...") }
     )
 }
 
 @Composable
-fun Buttonenter(){
+fun Buttonenter(pulsado: MutableState<Boolean>, viewModel: ViewModel, texto: MutableState<String>){
+
+    viewModel.checkText(texto.value)
+
+    var _activo by remember { mutableStateOf(viewModel.estadoLiveData.value!!.enterActivo) }
+
+    viewModel.estadoLiveData.observe(LocalLifecycleOwner.current) {
+        _activo = viewModel.estadoLiveData.value!!.enterActivo
+    }
+
     Column(verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .padding(top = 20.dp, start = 30.dp)) {
         Button(
+            enabled = _activo,
             onClick = {
-                Log.d("EnterGame", "Me has pulsado")
+                pulsado.value = true
             },
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
