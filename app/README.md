@@ -51,6 +51,101 @@ class MainActivity : ComponentActivity() {
 Aquí ponemos un log cat dentro del OnCreate para asegurarnos de que la actividad ha empezado.
 Para comprobarlo nos iríamos al log cat, Introduciríamos el Tag (OnCreate) y deberíamos de ver el mensage
 
+### 3. Composables :smile:
+Vamos a ver ejemplos de estructuras de composables
+
+```bash
+@Composable
+fun MyApp(viewModel: ViewModel) {
+    var pulsado by remember { mutableStateOf(false) }
+    var text by remember { mutableStateOf("") }
+    val textoGame by viewModel.nombreLiveData.observeAsState(viewModel.getNombre())
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        val backgroundImage = painterResource(id = R.drawable.fondoinicio) 
+        Image(
+            painter = backgroundImage,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+        Column {
+            if (!pulsado){
+                Login({
+                    pulsado = true
+                      }, viewModel, remember { mutableStateOf(text) })
+            }
+            else{
+                Game(viewModel, textoGame)
+            }
+        }
+    }
+}
+```
+Esta sería una Composable principal que va llamando a otras composables.
+**Aspectos a observar** :open_mouth:
+```bash
+#val textoGame by viewModel.nombreLiveData.observeAsState(viewModel.getNombre())
+Esto sirve para recoger datos del viewModel y poder repintarlos en las composables
+```
+
+```bash
+#val backgroundImage = painterResource(id = R.drawable.fondoinicio) 
+        #Image(
+            #painter = backgroundImage,
+            #contentDescription = null,
+            #contentScale = ContentScale.Crop,
+            #modifier = Modifier.fillMaxSize()
+        #)
+
+Todo esto es para dibujar una imagen
+```
+
+```bash
+#Box(
+        #modifier = Modifier
+            #.fillMaxSize()
+    #)
+Esto es una caja que recibe un modifier para modificar su aspecto
+```
+
+### IMPORTANTE :scream:
+Para poder moficiar el aspecto de las composables, debemos de usar el Objeto modifier y sus metodos, otro ejemplo de composable modificada con Modifier
+```bash
+@Composable
+fun Login(funcion:() -> Unit, viewModel: ViewModel, texto: MutableState<String>) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(top = 30.dp, start = 30.dp)
+    ) {
+
+        Row {
+            TextoInicial(texto = "¡Adivina el numero!")
+        }
+        Row {
+            NombreInicio()
+        }
+        Row {
+            TextNombreEscribir(texto)
+        }
+        Row {
+            Buttonenter(funcion, viewModel, texto)
+        }
+
+    }
+}
+```
+
+```bash
+#modifier = Modifier
+            #.padding(top = 30.dp, start = 30.dp)
+Podemos observar que dentro de los parámetros de colum, usamos el modifier que nos servirá para modificar el aspecto que tendrá todo lo que vaya en el Colum
+```
+
 
  
 
