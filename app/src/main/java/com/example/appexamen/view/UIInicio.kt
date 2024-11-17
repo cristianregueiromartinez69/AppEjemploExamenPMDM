@@ -48,7 +48,9 @@ fun MyApp(viewModel: ViewModel) {
         )
         Column {
             if (!pulsado){
-                Login({ pulsado = true }, viewModel, remember { mutableStateOf(text) })
+                Login({ pulsado = true
+                        viewModel.setNombre(text)
+                      }, viewModel, remember { mutableStateOf(text) })
             }
             else{
                 Game(viewModel)
