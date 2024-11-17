@@ -1,6 +1,5 @@
 package com.example.appexamen.view
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -49,13 +47,18 @@ fun MyApp(viewModel: ViewModel) {
             modifier = Modifier.fillMaxSize()
         )
         Column {
-            Login(remember { mutableStateOf(pulsado) }, viewModel, remember { mutableStateOf(text) })
+            if (!pulsado){
+                Login({ pulsado = true }, viewModel, remember { mutableStateOf(text) })
+            }
+            else{
+                Game(viewModel)
+            }
         }
     }
 }
 
 @Composable
-fun Login(pulsado :MutableState<Boolean>, viewModel: ViewModel, texto: MutableState<String>) {
+fun Login(funcion:() -> Unit, viewModel: ViewModel, texto: MutableState<String>) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,7 +76,7 @@ fun Login(pulsado :MutableState<Boolean>, viewModel: ViewModel, texto: MutableSt
             TextNombreEscribir(texto)
         }
         Row {
-            Buttonenter(pulsado, viewModel, texto)
+            Buttonenter(funcion, viewModel, texto)
         }
 
     }
@@ -130,7 +133,7 @@ fun TextNombreEscribir(text: MutableState<String>) {
 }
 
 @Composable
-fun Buttonenter(pulsado: MutableState<Boolean>, viewModel: ViewModel, texto: MutableState<String>){
+fun Buttonenter(funcion: () -> Unit, viewModel: ViewModel, texto: MutableState<String>){
 
     viewModel.checkText(texto.value)
 
@@ -147,7 +150,7 @@ fun Buttonenter(pulsado: MutableState<Boolean>, viewModel: ViewModel, texto: Mut
         Button(
             enabled = _activo,
             onClick = {
-                pulsado.value = true
+                funcion()
             },
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
