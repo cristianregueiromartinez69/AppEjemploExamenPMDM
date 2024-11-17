@@ -146,9 +146,62 @@ fun Login(funcion:() -> Unit, viewModel: ViewModel, texto: MutableState<String>)
 Podemos observar que dentro de los parámetros de colum, usamos el modifier que nos servirá para modificar el aspecto que tendrá todo lo que vaya en el Colum
 ```
 
+# 4. (onclick) :smile:
+En las composables, podemos usar el Button y este tiene una función onClick()
 
- 
+ ```bash
+@Composable
+fun Buttonenter(funcion: () -> Unit, viewModel: ViewModel, texto: MutableState<String>){
 
+    viewModel.checkText(texto.value)
+
+    var _activo by remember { mutableStateOf(viewModel.estadoLiveData.value!!.enterActivo) }
+
+    viewModel.estadoLiveData.observe(LocalLifecycleOwner.current) {
+        _activo = viewModel.estadoLiveData.value!!.enterActivo
+    }
+
+    Column(verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(top = 20.dp, start = 30.dp)) {
+        Button(
+            enabled = _activo,
+            onClick = {
+                viewModel.setNombre(texto.value)
+                funcion()
+            },
+            shape = RoundedCornerShape(16.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Red,
+            ),
+            modifier = Modifier
+                .padding(top = 80.dp)
+                .size(width = 150.dp, height = 60.dp)
+        ){
+            Text(
+                text = "Enter",
+                color = Color.White,
+                fontSize = 20.sp
+            )
+        }
+    }
+}
+```
+
+Si nos fijamos, veremos que en el onclick, podemos hacer lo que queramos, incluso yo le estoy pasando una funcion al propio onClick
+```bash
+#  onClick = {
+                #viewModel.setNombre(texto.value)
+                #funcion()
+            #},
+```
+La función que le paso es para esto 
+```bash
+#   pulsado = true
+                      #}, viewModel, remember { mutableStateOf(text) })
+```
+Lo que hacemos es pasarle una funcion que hace que cambie el valor de un booleano a true para cambiar de vista de UI y cambiar un texto que será el nombre que tenga que introducir el jugador
 
 
 
