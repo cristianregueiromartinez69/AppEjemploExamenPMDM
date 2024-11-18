@@ -393,6 +393,37 @@ class ViewModel:ViewModel(){
 class ViewModel:ViewModel()
 ```
 
+# 6. Datos (enum, object, listas) :bowtie:
+
+Dentro de nuestro MVVM, tenemos un apartado que son los Datos, que es ha donde el viewModel va a recoger la información para luego mostrarla a la vista.
+
+```bash
+#ejemplo clase Enum
+enum class Estados(val enterActivo:Boolean) {
+    VACIO(enterActivo = false),
+    COMPLETO(enterActivo = true)
+}
+
+enum class EstadosJugando(val startActivo:Boolean, val buttonColorActivo:Boolean){
+    INICIO(startActivo = true, buttonColorActivo = false),
+    GENERANDO(startActivo = false, buttonColorActivo = false),
+    ADIVINANDO(startActivo = false, buttonColorActivo = true)
+}
+```
+En el ejemplo anterio tenemos unas clases enum con unos estados. Las clases enum son bastante buenas para observar estados, lo veremos más adelante
+
+```bash
+#ejemplo de clase Object
+object Datos {
+
+    var nombre = ""
+    var random = 0
+    var numeroJugador = 0
+    var listaNumerosBotones : MutableList<Int> = mutableListOf(1,2,3,4,5,6)
+    var aciertos = 0
+}
+```
+ESto sería un singleton. Es Una instancia unica de un objeto, podemos llamarlo y cambiarle el valor a las variables
 
 
 
