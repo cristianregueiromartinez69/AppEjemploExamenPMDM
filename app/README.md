@@ -459,3 +459,80 @@ Podemos añadirle un valor y luego llamarlo desde la UI y este se redibujará
 
 # 8. Observable :bowtie:
 Una manera de observar aalgo lo hicimos en el punto anterior, pero ese no lo explicó damian, vamos con el que explicó este buen hombre.
+```bash
+val estadoLiveData : MutableLiveData<Estados> = MutableLiveData(Estados.VACIO)
+val estadoJuegoLiveData : MutableLiveData<EstadosJugando> = MutableLiveData(EstadosJugando.INICIO)
+```
+Recordais la clase estados que teníamos antes, pues con esto que hemos escrito, hemos declarado 2 MutableLiveData, pero de tipo Estados y lo hemos iniciado en INICIO.
+Puedes iniciarlo a lo que te salga de los huevos.
+
+**IMPORTANTE**:scream:
+Luego, tenemos que llamarlo en los metodos del viewModel en los cuales queremos que se cambien los estados, tal que así
+```bash
+estadoJuegoLiveData.value = EstadosJugando.GENERANDO
+```
+
+Luego en la UI, hacemos lo siguiente
+
+```bash
+@Composable
+fun CreateButton(viewModel: ViewModel, numeroColor:Int, color: Color, textButton:String, colorLetra:Color) {
+
+    var _activo by remember { mutableStateOf(viewModel.estadoJuegoLiveData.value!!.buttonColorActivo) }
+
+    viewModel.estadoJuegoLiveData.observe(LocalLifecycleOwner.current) {
+        _activo = viewModel.estadoJuegoLiveData.value!!.buttonColorActivo
+    }
+
+    Button(
+        enabled = _activo,
+        onClick = {
+            viewModel.addNumber(numeroColor, viewModel.getRandom())
+        },
+        shape = RoundedCornerShape(16.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = color,
+        ),
+        modifier = Modifier
+            .padding(top = 60.dp, start = 20.dp)
+            .size(width = 150.dp, height = 60.dp)
+    ) {
+       Text(
+           text = textButton,
+           fontSize = 20.sp,
+           fontWeight = FontWeight.ExtraBold,
+           color = colorLetra
+       )
+    }
+}
+```
+
+Las Lineas que nos importan son estas:
+```bash
+var _activo by remember { mutableStateOf(viewModel.estadoJuegoLiveData.value!!.buttonColorActivo) }
+
+    viewModel.estadoJuegoLiveData.observe(LocalLifecycleOwner.current) {
+        _activo = viewModel.estadoJuegoLiveData.value!!.buttonColorActivo
+    }
+
+    Button(
+        enabled = _activo,
+```
+Declaramos una variable que será la observada:
+```bash
+var _activo by remember { mutableStateOf(viewModel.estadoJuegoLiveData.value!!.buttonColorActivo) }
+```
+
+Declaramos el observer y dentro la variable a observar:
+```bash
+viewModel.estadoJuegoLiveData.observe(LocalLifecycleOwner.current) {
+        _activo = viewModel.estadoJuegoLiveData.value!!.buttonColorActivo
+    }
+```
+Esta variable cambiará según cambie lo que tenemos asignado para ser observado, en este caso los botones de colores. Luego esa variable la podemos asignar a si el boton está o no disponible con la funcoon enabled:
+```bash
+Button(
+        enabled = _activo,
+#Resto de codigo...
+```
+Con esto haremos que el enables esté o no activo dependendiendo del estado que está siendo observado
