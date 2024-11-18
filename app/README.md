@@ -536,3 +536,64 @@ Button(
 #Resto de codigo...
 ```
 Con esto haremos que el enables esté o no activo dependendiendo del estado que está siendo observado
+
+# 9. Curutinas
+Podemos definir las curutinas como si fueran hilos, que no lo son en verdad, pero podría entenderse así. Nos sirve para que en nuestras aplicaciones pasen cosas en segundo plano sin que afecte a la aplicacion principal y su funcionamiento. Ejemplo de curutina.
+
+```bash
+#Curutina en la UI
+    var _activo by remember { mutableStateOf(viewModel.estadoJuegoLiveData.value!!.startActivo) }
+     LaunchedEffect(_color){
+            while(_activo){
+                delay(1000)
+                _color = color.colorParpadeo
+                delay(1000)
+                _color = color.colorInicio
+                delay(1000)
+            }
+        }
+```
+Esto sería una curutina en la UI.
+
+**COMO FUNCIONA**:astonished:
+Tenemos un bloque de codigo que empieza por LaunchedEffect y por parametro le vamos a pasar un color, podriamos pasarle cualquier cosa con la cual queramos que ocurra algo.
+Dentro del metodo tenemos un bucle while que indica que mientras la variable activo este presente, es decir, en nuestro caso, sea true, esté visible para el usuario, ya que es lo que hace esa variable, los colores del boton de start van a ir cambiando con un delay de 1 segundo
+
+```bash
+#Curutina en el ViewModel
+private fun cambiosColores(lista_Random: MutableList<Int>){
+        viewModelScope.launch {
+            for(i in 0 until lista_Random.size){
+                if(lista_Random[i] == 1){
+                    delay(500)
+                    _colorRojoLiveData.value = Color(0xFFFF9999)
+                    delay(500)
+                    _colorRojoLiveData.value = ColoresIluminados.ROJO_PARPADEO.colorNomal
+                    delay(500)
+                }
+                else if(lista_Random[i] == 2){
+                    delay(500)
+                    _colorVerdeLiveData.value = Color(0xFFA8FFAA)
+                    delay(500)
+                    _colorVerdeLiveData.value = ColoresIluminados.VERDE_PARPADEO.colorNomal
+                    delay(500)
+                }
+                else if(lista_Random[i] == 3){
+                    delay(500)
+                    _colorAzulLiveData.value = Color(0xFF5F85FF)
+                    delay(500)
+                    _colorAzulLiveData.value = ColoresIluminados.AZUL_PARPADEO.colorNomal
+                    delay(500)
+                }
+                else if (lista_Random[i] == 4){
+                    delay(500)
+                    _colorAmarilloLiveData.value = Color(0xFFFCFFBE)
+                    delay(500)
+                    _colorAmarilloLiveData.value = ColoresIluminados.AMARILLO_PARPADEO.colorNomal
+                    delay(500)
+                }
+            }
+        }
+    }
+```
+Esta curutina es del juego de simon dice y la uso para cambiar los colores de los botones. Aqui empieza con viewModelScope.launch, el resto es practicamente igual, podemos establecer delays como en los hilos y luego este metodo lo podemos llamar en donde queramos y se ejecutará segun lo programado
