@@ -425,5 +425,37 @@ object Datos {
 ```
 ESto sería un singleton. Es Una instancia unica de un objeto, podemos llamarlo y cambiarle el valor a las variables
 
+# 7. byRemenber, (MutableLiveData(Esto es opcional)) :bowtie:
+En las composables, las variables no se redibujarán, a no ser que usemos esto
+```bash
+var _color by remember { mutableStateOf(color.colorInicio) }
+```
+Cuando usamos el by remenber, es como si le dijeramos al programa, que se acuerde del valor anterior para así poder redibujarlo
 
+```bash
+#Ejemplo con mutableLiveData
+val aciertos by viewModel.aciertosLiveData.observeAsState(viewModel.getAciertos())
+```
+Imaginemos que en un juego de adivinar el numero, como el de esta aplicacion de mierda, queremos poner una composable en la cual hay un texto y un valor para los aciertos. 
+Queremos que ese valor se actualice según vayamos ganando las rondas. Para ello, usaremos lo anterior que hará de observador de esto 
 
+```bash
+private var _aciertosLiveData = MutableLiveData<Int>()
+val aciertosLiveData: LiveData<Int> get() = _aciertosLiveData
+```
+Tenemos un MutableLiveData que será de tipo entero
+```bash
+fun setAciertos(){
+        Datos.aciertos += 1
+        _aciertosLiveData.value = Datos.aciertos
+    }
+
+    fun perdedorAciertos(){
+        Datos.aciertos = 0
+        _aciertosLiveData.value = Datos.aciertos
+    }
+```
+Podemos añadirle un valor y luego llamarlo desde la UI y este se redibujará
+
+# 8. Observable :bowtie:
+Una manera de observar aalgo lo hicimos en el punto anterior, pero ese no lo explicó damian, vamos con el que explicó este buen hombre.
