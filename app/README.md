@@ -204,7 +204,194 @@ La función que le paso es para esto
 Lo que hacemos es pasarle una funcion que hace que cambie el valor de un booleano a true para cambiar de vista de UI y cambiar un texto que será el nombre que tenga que introducir el jugador
 
 
+# 5. MVVN :smile:
+El patrón MVVM (Model-View-ViewModel) es un patrón de arquitectura de software que se utiliza principalmente en aplicaciones de desarrollo de interfaces de usuario. Este patrón ayuda a separar la lógica de negocio y la lógica de presentación, facilitando un código más limpio, mantenible y escalable. MVVM es popular en frameworks de desarrollo como Android y frameworks de frontend web como Angular.
 
+**Componentes de MVVM**
+- Model (Modelo):
+
+```bash
+#Representa la capa de datos de la aplicación.
+```
+Contiene la lógica de negocio y las reglas para manejar los datos.
+Puede ser un objeto de base de datos, un servicio web, un repositorio, etc.
+No tiene conocimiento de la vista ni de la ViewModel.
+
+
+- View (Vista):
+```bash
+#Es la interfaz de usuario, es decir, lo que el usuario ve e interactúa.
+```
+Debe ser lo más simple posible y solo encargarse de la presentación de los datos.
+Se conecta con la ViewModel para obtener los datos y mostrar actualizaciones.
+No contiene lógica de negocio.
+
+
+- ViewModel:
+```bash
+#Es el puente entre la vista y el modelo.
+```
+Gestiona la lógica de presentación y mantiene la vista actualizada con los datos que provienen del modelo.
+No tiene referencia directa a la vista, lo que permite que la vista observe a la ViewModel.
+Contiene propiedades y métodos a los que la vista puede suscribirse para recibir notificaciones de cambios de estado.
+
+## Ejemplo de codigo :bowtie:
+
+```bash
+#Model
+object Datos {
+
+    var nombre = ""
+}
+
+enum class Estados(val enterActivo:Boolean) {
+    VACIO(enterActivo = false),
+    COMPLETO(enterActivo = true)
+}
+
+```
+
+```bash
+#Ejemplo de vista
+@Composable
+fun Game(viewModel: ViewModel, text: String) {
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        val backgroundImage = painterResource(id = R.drawable.fondoinicio)
+        Image(
+            painter = backgroundImage,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+        Column {
+            NombreJUgador(text)
+        }
+        Column(modifier = Modifier
+            .padding(top = 130.dp)) {
+            Row {
+                CreateButton(Color.Red)
+                CreateButton(Color.Yellow)
+
+            }
+            Row {
+                CreateButton(Color.Cyan)
+                CreateButton(Color.DarkGray)
+            }
+            Row {
+                CreateButton(Color.Green)
+                CreateButton(Color.Blue)
+            }
+            Row {
+                StartButton(Color.Magenta)
+            }
+        }
+
+    }
+}
+
+@Composable
+fun NombreJUgador(text: String) {
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .padding(top = 30.dp, start = 90.dp)
+    ) {
+
+        Text(
+            text = "Jugador: $text",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun CreateButton(color: Color) {
+    Button(
+        onClick = {
+        },
+        shape = RoundedCornerShape(16.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = color,
+        ),
+        modifier = Modifier
+            .padding(top = 60.dp, start = 20.dp)
+            .size(width = 150.dp, height = 60.dp)
+    ) {
+
+    }
+}
+
+@Composable
+fun StartButton(color: Color) {
+    Button(
+        onClick = {
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = color,
+        ),
+        modifier = Modifier
+            .padding(top = 60.dp, start = 90.dp)
+            .size(width = 200.dp, height = 100.dp)
+            .clip(CircleShape)
+    ) {
+
+    }
+}
+
+```
+
+```bash
+#Ejemplo de viewModel
+class ViewModel:ViewModel(){
+
+    val estadoLiveData : MutableLiveData<Estados> = MutableLiveData(Estados.VACIO)
+    private val _nombreLiveData = MutableLiveData<String>()
+    val nombreLiveData : LiveData<String> get() = _nombreLiveData
+
+    init {
+        _nombreLiveData.value = Datos.nombre
+    }
+
+
+    fun checkText(texto:String){
+        if (texto.isEmpty()){
+            getEstadoVacio()
+        }
+        else{
+            getEstadoCompleto()
+        }
+    }
+
+    fun setNombre(nombre:String){
+        Datos.nombre = nombre
+        _nombreLiveData.value = Datos.nombre
+    }
+
+    fun getNombre():String{
+        return Datos.nombre
+    }
+
+    fun getEstadoVacio(){
+        estadoLiveData.value = Estados.VACIO
+    }
+
+    fun getEstadoCompleto(){
+        estadoLiveData.value = Estados.COMPLETO
+    }
+}
+```
+**Aspectos a tener en cuenta**
+```bash
+#La clase viewModel debe de heredar de ella, tal que así
+class ViewModel:ViewModel()
+```
 
 
 
