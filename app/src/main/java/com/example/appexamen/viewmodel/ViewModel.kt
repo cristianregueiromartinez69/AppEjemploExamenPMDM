@@ -59,6 +59,7 @@ class ViewModel:ViewModel(){
             Log.d("random", "He ganado")
             return true
         }
+        perdedorAciertos()
         estadoJuegoLiveData.value = EstadosJugando.INICIO
         Log.d("random", "He perdido")
         return false
@@ -91,6 +92,11 @@ class ViewModel:ViewModel(){
 
     fun setAciertos(){
         Datos.aciertos += 1
+        _aciertosLiveData.value = Datos.aciertos
+    }
+
+    fun perdedorAciertos(){
+        Datos.aciertos = 0
         _aciertosLiveData.value = Datos.aciertos
     }
 
